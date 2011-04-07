@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-pylov.py (PyLint Output Visualizer)
+pylov.py (PyLint Output Viewer)
 
 Show the output of PyLint in a window. The report can be refreshed 
 by pressing 'r', 'u', or F5.
@@ -10,6 +10,9 @@ This way you can switch easily between your favorite text editor and
 the PyLint report. If you add or remove some lines in the source,
 the line numbers indicated in the report become invalid. No problem,
 you can refresh the report with a single key press.
+
+If you have a .pylintrc file in your HOME folder, it will be
+taken into account.
 
 TODO: when the main window is resized, the html panel should follow it.
 """
