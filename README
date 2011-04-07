@@ -1,0 +1,18 @@
+PyLint Output Visualizer
+========================
+
+Author:      Laszlo Szathmary (jabba.laci@gmail.com)
+Date:        April, 2011
+
+GitHub:      https://github.com/jabbalaci/PyLint-Output-Visualizer
+
+This free software is copyleft licensed under the same terms as Python, or,
+at your option, under version 2 of the GPL license.
+
+PyLint report is shown in a window. The report can be refreshed with a single
+key press.
+
+PyLint is a static code analyzer that can tell you where (in which lines) you
+should do some changes to the code. However, if you add or remove some lines
+in the source code, the report's line numbers become invalid. By pressing
+a single key ('r', 'u', or F5), you can refresh the report.
