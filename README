@@ -1,5 +1,5 @@
-PyLint Output Visualizer
-========================
+PyLint Output Viewer
+====================
 
 Author:      Laszlo Szathmary (jabba.laci@gmail.com)
 Date:        April, 2011
@@ -17,3 +17,7 @@ PyLint is a static code analyzer that can tell you where (in which lines) you
 should do some changes to the code. However, if you add or remove some lines
 in the source code, the report's line numbers become invalid. By pressing
 a single key ('r', 'u', or F5), you can refresh the report.
+
+The behaviour of PyLint can be controlled with a configuration file (see the 
+attached .pylintrc file). If you copy it to your HOME folder, PyLint will
+take it into account. Feel free to customize this file.

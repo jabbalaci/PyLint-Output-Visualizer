@@ -22,6 +22,8 @@ import shlex
 
 from subprocess import Popen, PIPE
 
+VERSION = "0.1.1"
+
 # location of pylint
 PYLINT = '/usr/local/bin/pylint'
 # size of the window
@@ -31,7 +33,7 @@ def execute_command(command):
     """Execute an external command and return its output."""
     args = shlex.split(command)
     return Popen(args, stdout=PIPE).communicate()[0]
-
+    
 class MyHtmlPanel(wx.Panel):
     """The PyLint report is shown in this panel."""
     
@@ -42,6 +44,7 @@ class MyHtmlPanel(wx.Panel):
         self.parameters = parameters
         self.html1 = wx.html.HtmlWindow(self, id, pos=(0, 30), 
                                         size=(WIDTH-10, HEIGHT-60))
+                                        
         self.html1.Bind(wx.EVT_KEY_DOWN, self.key_down)
 
         self.OnRefreshPage(None)
@@ -54,7 +57,13 @@ class MyHtmlPanel(wx.Panel):
         
     def OnRefreshPage(self, event):
         """Relaunch pylint and show the new output."""
-        output = execute_command("%s %s -f html" % (PYLINT, self.parameters[0]))
+        rcfile_arg = ""
+        rcfile = os.path.expanduser('~') + '/' + '.pylintrc'
+        if os.path.isfile(rcfile):
+            rcfile_arg = "--rcfile=%s" % rcfile
+        command = "%s %s -f html %s" % (PYLINT, self.parameters[0], rcfile_arg)
+        print "# command: %s" % command
+        output = execute_command(command)
         self.html1.SetPage(output)
         self.html1.SetFocus()
 
@@ -76,7 +85,7 @@ class MyHtmlPanel(wx.Panel):
         
 if __name__ == "__main__":
     if len(sys.argv) == 1:
-        print "Jabba's PyLint Output Visualizer v0.1"
+        print "Jabba's PyLint Output Viewer %s" % VERSION
         print "Usage: %s <source.py>" % sys.argv[0]
         sys.exit(-1)
     # else
@@ -85,7 +94,7 @@ if __name__ == "__main__":
         sys.exit(-2)
     # else
     app = wx.PySimpleApp()
-    frame = wx.Frame(None, -1, "Jabba's PyLint Output Visualizer v0.1", 
+    frame = wx.Frame(None, -1, "Jabba's PyLint Output Viewer %s" % VERSION, 
                      size=(WIDTH, HEIGHT))
     MyHtmlPanel(frame, -1, sys.argv[1:])
     frame.Show(True)
