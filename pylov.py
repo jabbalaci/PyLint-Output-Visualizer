@@ -25,7 +25,7 @@ import shlex
 
 from subprocess import Popen, PIPE
 
-VERSION = "0.1.1"
+VERSION = "0.1.4"
 
 # location of pylint
 PYLINT = '/usr/local/bin/pylint'
@@ -44,31 +44,43 @@ class MyHtmlPanel(wx.Panel):
         """Constructor."""
         wx.Panel.__init__(self, parent, id)
         self.parent = parent
+        self.first_run = True
         self.parameters = parameters
         self.html1 = wx.html.HtmlWindow(self, id, pos=(0, 30), 
                                         size=(WIDTH-10, HEIGHT-60))
                                         
         self.html1.Bind(wx.EVT_KEY_DOWN, self.key_down)
-
-        self.OnRefreshPage(None)
-        
+        #self.label1 = wx.StaticText(self, -1, "", wx.Point(250, 7))
+        #
         self.btn1 = wx.Button(self, -1, "Refresh", pos=(0, 0))
         self.btn1.Bind(wx.EVT_BUTTON, self.OnRefreshPage)
-
+        #
         self.btn2 = wx.Button(self, -1, "Quit", pos=(110, 0))
         self.btn2.Bind(wx.EVT_BUTTON, self.OnQuit)
+        #
+        self.OnRefreshPage(None)
         
     def OnRefreshPage(self, event):
         """Relaunch pylint and show the new output."""
+        
+        scrollpos = self.html1.GetViewStart()[1]
+        self.btn1.SetLabel("working...")
+        wx.Yield()   # do show the changed label
+        
         rcfile_arg = ""
         rcfile = os.path.expanduser('~') + '/' + '.pylintrc'
         if os.path.isfile(rcfile):
             rcfile_arg = "--rcfile=%s" % rcfile
         command = "%s %s -f html %s" % (PYLINT, self.parameters[0], rcfile_arg)
-        print "# command: %s" % command
+        if self.first_run:
+            print "# command: %s" % command
+            self.first_run = False
         output = execute_command(command)
         self.html1.SetPage(output)
         self.html1.SetFocus()
+        
+        self.html1.Scroll(0, scrollpos)   # jump to the prev. scroll position
+        self.btn1.SetLabel("Refresh")
 
     def key_down(self, event):
         """Key bindings."""
@@ -76,7 +88,8 @@ class MyHtmlPanel(wx.Panel):
         key = event.GetKeyCode()
         key_func = { ord('R'):  self.OnRefreshPage,
                      ord('U'):  self.OnRefreshPage,
-                     wx.WXK_F5: self.OnRefreshPage }
+                     wx.WXK_F5: self.OnRefreshPage,
+                     ord('Q'):  self.OnQuit }
         if key in key_func:
             key_func[key](event)
         else:
