@@ -25,7 +25,7 @@ import shlex
 
 from subprocess import Popen, PIPE
 
-VERSION = "0.1.4"
+VERSION = "0.1.5"
 
 # location of pylint
 PYLINT = '/usr/local/bin/pylint'
@@ -108,6 +108,12 @@ if __name__ == "__main__":
     if os.path.isfile(sys.argv[1]) is False:
         print "Error: %s: the specified file does not exist." % sys.argv[0]
         sys.exit(-2)
+    # else
+    if os.path.isfile(PYLINT) is False:
+        print "Error: %s: pylint is not found at %s." % (sys.argv[0], PYLINT)
+        print "Maybe not installed?"
+        print "Tip: sudo pip install pylint"
+        sys.exit(-3)
     # else
     app = wx.PySimpleApp()
     frame = wx.Frame(None, -1, "Jabba's PyLint Output Viewer %s" % VERSION, 
